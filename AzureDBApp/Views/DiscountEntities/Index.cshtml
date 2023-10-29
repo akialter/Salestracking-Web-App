@@ -48,7 +48,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Product.Name)
+                @(item.Product.Name + ", " + item.Product.Manufacturer)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.BeginDate)

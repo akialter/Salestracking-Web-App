@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Upload";
+}
+
+<div class="container">
+    <h2>Uploaded File Content</h2>
+    @if (ViewBag.FileContent != null)
+    {
+        <pre>@Html.Raw(ViewBag.FileContent)</pre>
+    }
+    else
+    {
+        <p>No file content to display.</p>
+    }
+</div>
+

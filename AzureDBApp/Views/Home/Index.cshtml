@@ -1,0 +1,138 @@
+﻿@model IEnumerable<AzureDBApp.Models.CommissionResult>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    body {
+        caret-color: transparent;
+    }
+</style>
+
+<link href="https://cdn.datatables.net/v/bs4/dt-1.13.6/datatables.min.css" rel="stylesheet">
+<script src="https://cdn.datatables.net/v/bs4/dt-1.13.6/datatables.min.js" defer="defer"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tbllist').DataTable();
+
+        // Check if the form is submitted and both date inputs are valid
+        var formSubmitted = false;
+
+        // Set the selected option based on the hidden input value
+        $('#selectedQuarter').val($('#selectedQuarterHidden').val());
+
+        // Add event listener to the form submission
+        $('form').on('submit', function () {
+            formSubmitted = true;
+        });
+
+        // Add event listener to the select input
+        $('#selectedQuarter').on('change', function () {
+            // Automatically submit the form when the selected quarter changes
+            if (!formSubmitted) {
+                $('form').submit();
+            }
+        });
+    });
+</script>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Create arrays for salesperson names, commissions, and colors
+        var salespersons = [];
+        var commissions = [];
+        var colors = [];
+
+        @foreach (var result in Model)
+        {
+            if (@result.YearQuarter == @ViewBag.SelectedQuarter)
+            {
+                @:salespersons.push('@result.SalespersonFirstName' + ' ' + '@result.SalespersonLastName');
+                @:commissions.push(@Math.Round(result.TotalCommission, 2));
+
+                @:var color = "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + ", 0.5)";
+                @:colors.push(color);
+            }
+        }
+
+        // Create a chart using the arrays
+        var ctx = document.getElementById('commissionChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: salespersons,
+                datasets: [{
+                    label: 'Total Commission',
+                    data: commissions,
+                    backgroundColor: colors,
+                    borderColor: colors, // Set the borderColor to be the same as the backgroundColor
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+
+<div class="container">
+    <h2>Quarterly Salesperson Commission Report</h2>
+    <form method="post">
+        <div class="form-row align-items-center">
+            <div class="col-auto my-1">
+                <label for="selectedQuarter" class="mr-sm-2">Select a Quarter:</label>
+                <select class="custom-select mr-sm-2 mb-2" id="selectedQuarter" name="selectedQuarter">
+                    @foreach (var quarter in Model.Select(result => result.YearQuarter).Distinct())
+                    {
+                        <option value="@quarter">@quarter</option>
+                    }
+                </select>
+                <input type="hidden" id="selectedQuarterHidden" name="selectedQuarter" value="@ViewBag.SelectedQuarter">
+            </div>
+        </div>
+    </form>
+
+
+    @if (Model != null)
+    {
+        <table id="tbllist" class="table">
+            <thead>
+                <tr>
+                    <th>Salesperson First Name</th>
+                    <th>Salesperson Last Name</th>
+                    <th>Total Commission</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model)
+                {
+                    // Check if the entry is in the selected quarter
+                    @if (@result.YearQuarter == @ViewBag.SelectedQuarter)
+                    {
+                        <tr>
+                            <td>@result.SalespersonFirstName</td>
+                            <td>@result.SalespersonLastName</td>
+                            <td>$@Math.Round(result.TotalCommission, 2)</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+
+        <canvas id="commissionChart" width="400" height="200"></canvas>
+    }
+</div>

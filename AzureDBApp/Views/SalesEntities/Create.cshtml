@@ -1,0 +1,86 @@
+﻿@model AzureDBApp.Models.SalesEntity
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<style>
+    body {
+        caret-color: transparent;
+    }
+
+    input[type="text"] {
+        caret-color: auto;
+    }
+
+</style>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="error-message">
+        @TempData["ErrorMessage"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <script>
+        // Automatically hide the error message after 2 seconds
+        setTimeout(function () {
+            $("#error-message").fadeOut("slow");
+        }, 2000);
+    </script>
+}
+
+<h1>Create a sale</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+   
+
+            <div class="form-group">
+                <label asp-for="ProductId" class="control-label">Product</label>
+                <select asp-for="ProductId" class="form-select" asp-items="@(ViewData["ProductId"] as SelectList)"></select>
+            </div>
+
+ 
+
+            <div class="form-group">
+                <label asp-for="SalespersonId" class="control-label">Salesperson</label>
+                <select asp-for="SalespersonId" class="form-select" asp-items="@(ViewData["SalespersonId"] as SelectList)"></select>
+            </div>
+
+
+
+            <div class="form-group">
+                <label asp-for="CustomerId" class="control-label">Customer</label>
+                <select asp-for="CustomerId" class="form-select" asp-items="@(ViewData["CustomerId"] as SelectList)"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SalesDate" class="control-label">Sales Date</label>
+                <input asp-for="SalesDate" type="date" class="form-control" />
+                <span asp-validation-for="SalesDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

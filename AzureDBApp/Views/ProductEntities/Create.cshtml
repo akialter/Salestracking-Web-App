@@ -1,0 +1,108 @@
+﻿@model AzureDBApp.Models.ProductEntity
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<style>
+    body {
+        caret-color: transparent;
+    }
+
+    input[type="text"] {
+        caret-color: auto;
+    }
+
+</style>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="error-message">
+        @TempData["ErrorMessage"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <script>
+        // Automatically hide the error message after 2 seconds
+        setTimeout(function () {
+            $("#error-message").fadeOut("slow");
+        }, 2000);
+    </script>
+}
+
+<h1>Add a product</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Manufacturer" class="control-label"></label>
+                <input asp-for="Manufacturer" class="form-control" />
+                <span asp-validation-for="Manufacturer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Style" class="control-label"></label>
+                <input asp-for="Style" class="form-control" />
+                <span asp-validation-for="Style" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchasePrice" class="control-label"></label>
+                <input asp-for="PurchasePrice" class="form-control" />
+                <span asp-validation-for="PurchasePrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SalePrice" class="control-label"></label>
+                <input asp-for="SalePrice" class="form-control" />
+                <span asp-validation-for="SalePrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="QtyOnHand" class="control-label"></label>
+                <input asp-for="QtyOnHand" class="form-control" />
+                <span asp-validation-for="QtyOnHand" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CommissionPercentage" class="control-label"></label>
+                <input asp-for="CommissionPercentage" class="form-control" />
+                <span asp-validation-for="CommissionPercentage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@*<div class="col-md-4">
+    <form asp-action="Upload" enctype="multipart/form-data">
+        <!-- Add enctype attribute for file upload -->
+        <!-- ... Existing form fields ... -->
+        <div class="form-group">
+            <label asp-for="File" class="control-label"></label>
+            <input asp-for="File" type="file" class="form-control" /> <!-- Add file input field -->
+            <span asp-validation-for="File" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </form>
+</div>*@
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

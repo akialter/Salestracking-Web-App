@@ -1,0 +1,77 @@
+﻿@model IEnumerable<AzureDBApp.Models.SalespersonEntity>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    body {
+        caret-color: transparent;
+    }
+</style>
+
+
+<h1>Salesperson</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<link href="https://cdn.datatables.net/v/bs4/dt-1.13.6/datatables.min.css" rel="stylesheet">
+<script src="https://cdn.datatables.net/v/bs4/dt-1.13.6/datatables.min.js" defer="defer"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet">
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tbllist').DataTable({
+            columnDefs: [
+                {
+                    type: 'date',
+                    targets: [4, 5], // Column indices for Start Date and Termination Date
+                    render: function (data, type, row) {
+                        if (type === 'display' || type === 'filter') {
+                            // Format date as date-only (yyyy-MM-dd)
+                            return data ? new Date(data).toLocaleDateString('en-US') : '';
+                        }
+                        return data;
+                    }
+                }
+            ]
+        });
+    });
+</script>
+
+<table id="tbllist" class="table">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Start Date</th>
+            <th>Termination Date</th>
+            <th>Manager</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.FirstName</td>
+                <td>@item.LastName</td>
+                <td>@item.Address</td>
+                <td>@item.Phone</td>
+                <td>@item.StartDate</td>
+                <td>@item.TerminationDate</td>
+                <td>@item.Manager</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.SalespersonId">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.SalespersonId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

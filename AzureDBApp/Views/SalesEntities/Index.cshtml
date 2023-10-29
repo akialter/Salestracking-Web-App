@@ -1,0 +1,115 @@
+﻿@model IEnumerable<AzureDBApp.Models.SalesEntity>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    body {
+        caret-color: transparent;
+    }
+</style>
+
+<h1>Sales</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<link href="https://cdn.datatables.net/v/bs4/dt-1.13.6/datatables.min.css" rel="stylesheet">
+<script src="https://cdn.datatables.net/v/bs4/dt-1.13.6/datatables.min.js" defer="defer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js" defer="defer"></script>
+<script src="https://cdn.datatables.net/datetime/1.5.1/js/dataTables.dateTime.min.js" defer="defer"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet">
+@*
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tbllist').DataTable();
+    });
+</script>*@
+
+<div class="row">
+    <div class="col-md-2">
+        <div class="form-inline">
+            <label for="min" class="mr-1">Minimum Date:</label>
+            <input type="date" id="min" class="form-control" name="min">
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-inline">
+            <label for="max" class="mr-1">Maximum Date:</label>
+            <input type="date" id="max" class="form-control" name="max">
+        </div>
+    </div>
+</div>
+
+<div class="mb-2"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        // Initialize DataTable
+        var table = $('#tbllist').DataTable({
+            columnDefs: [
+                {
+                    type: 'date',
+                    targets: 5 // This is the column index for "Sales Date"
+                }
+            ],
+            responsive: true
+        });
+
+        // Initialize variables for min and max dates
+        let minDate = null;
+        let maxDate = null;
+
+        // Custom filtering function to search data in column 5 (Sales Date) within the range
+        $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+            let date = new Date(data[5]); // Assuming column 5 is the Sales Date column
+
+            if (
+                (minDate === null || date >= minDate) &&
+                (maxDate === null || date <= new Date(maxDate.getTime() + 86400000))
+            ) {
+                return true;
+            }
+
+            return false;
+        });
+
+        // Date inputs
+        $('#min, #max').on('change', function () {
+            minDate = $('#min').val() ? new Date($('#min').val()) : null;
+            maxDate = $('#max').val() ? new Date($('#max').val()) : null;
+            table.draw();
+        });
+    });
+</script>
+
+
+<table id="tbllist" class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Manufacturer</th>
+            <th>Salesperson</th>
+            <th>Salesperson Phone Number</th>
+            <th>Customer</th>
+            <th>Sales Date</th>
+            <th>Salesperson Commission</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Product.Name</td>
+                <td>@item.Product.Manufacturer</td>
+                <td>@item.Salesperson.FirstName @item.Salesperson.LastName</td>
+                <td>@item.Salesperson.Phone</td>
+                <td>@item.Customer.FirstName @item.Customer.LastName</td>
+                <td>@item.SalesDate.ToShortDateString()</td>
+                <td>$@(Math.Round(((double) item.Product.SalePrice * (item.Product.CommissionPercentage / 100)), 2))</td>
+            </tr>
+        }
+    </tbody>
+</table>

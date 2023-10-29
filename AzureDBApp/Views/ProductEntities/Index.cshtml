@@ -1,0 +1,60 @@
+﻿@model IEnumerable<AzureDBApp.Models.ProductEntity>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<style>
+    body {
+        caret-color: transparent;
+    }
+</style>
+
+<h1>Product</h1>
+
+<p>
+    <a asp-action="Create">Create a new product</a>
+</p>
+
+<link href="https://cdn.datatables.net/v/bs4/dt-1.13.6/datatables.min.css" rel="stylesheet">
+<script src="https://cdn.datatables.net/v/bs4/dt-1.13.6/datatables.min.js" defer="defer"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet">
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tbllist').DataTable();
+    });
+</script>
+
+<table id="tbllist" class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Manufacturer</th>
+            <th>Style</th>
+            <th>Purchase Price</th>
+            <th>Sale Price</th>
+            <th>Qty On Hand</th>
+            <th>Commission Percentage</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Manufacturer</td>
+                <td>@item.Style</td>
+                <td>$@item.PurchasePrice</td>
+                <td>$@item.SalePrice</td>
+                <td>@item.QtyOnHand</td>
+                <td>@item.CommissionPercentage%</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

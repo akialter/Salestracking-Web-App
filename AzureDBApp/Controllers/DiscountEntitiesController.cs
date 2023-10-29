@@ -131,8 +131,7 @@ namespace AzureDBApp.Controllers
                 .Select(p => new SelectListItem { Value = p.ProductId.ToString(), Text = p.Name + ", " + p.Manufacturer })
                 .ToList();
 
-            ViewBag.ProductsList = productsList;
-
+            ViewData["ProductId"] = new SelectList(productsList, "Value", "Text");
             return View(discountEntity);
         }
 
@@ -148,30 +147,41 @@ namespace AzureDBApp.Controllers
                 return NotFound();
             }
 
+            // Add view scene should the operation is not successful
+            var productsList = _context.Products
+                .Select(p => new SelectListItem { Value = p.ProductId.ToString(), Text = p.Name + ", " + p.Manufacturer })
+                .ToList();
+            ViewData["ProductId"] = new SelectList(productsList, "Value", "Text");
+
+            var product = _context.Products.FirstOrDefault(p => p.ProductId == discountEntity.ProductId);
+
             ModelState.Remove("Product"); // bad practice, remove the referenced entity, but do the trick
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // Fetch the existing entity from the database
-                    var existingDiscount = await _context.Discounts.FindAsync(discountEntity.DiscountId);
-
-                    if (existingDiscount == null)
+                    if (ModelState.IsValid)
                     {
-                        return NotFound();
+                        try
+                        {
+                            _context.Update(discountEntity);
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            if (!DiscountEntityExists(discountEntity.DiscountId))
+                            {
+                                return NotFound();
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
+                        return RedirectToAction(nameof(Index));
                     }
-
-                    // Copy non-ProductId properties from discountEntity to the existing entity
-                    existingDiscount.BeginDate = discountEntity.BeginDate;
-                    existingDiscount.EndDate = discountEntity.EndDate;
-                    existingDiscount.DiscountPercentage = discountEntity.DiscountPercentage;
-
-                    // Update and save the existing entity
-                    _context.Entry(existingDiscount).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
-
-                    return RedirectToAction(nameof(Index));
                 }
+
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!DiscountEntityExists(discountEntity.DiscountId))
@@ -186,7 +196,7 @@ namespace AzureDBApp.Controllers
             }
 
             // If ModelState is not valid, return the view with validation errors
-            return View(discountEntity);
+            return View();
         }
 
         // GET: DiscountEntities/Delete/5

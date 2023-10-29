@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AzureDBApp.DB;
 using AzureDBApp.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.CodeAnalysis;
 
 namespace AzureDBApp.Controllers
 {

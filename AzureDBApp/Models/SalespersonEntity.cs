@@ -60,8 +60,9 @@ namespace AzureDBApp.Models
         public string Address { get; set; }
 
         [DisplayName("Phone")]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "Invalid phone number format (must be 10 digits).")]
+        [RegularExpression(@"^\d{3}-\d{3}-\d{4}$", ErrorMessage = "Invalid phone number format (must be in the format '###-###-####').")]
         public string Phone { get; set; }
+
 
         [DisplayName("Start Date")]
         [DataType(DataType.Date)]

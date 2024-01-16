@@ -19,6 +19,7 @@ Link to the application: https://pbappservice.azurewebsites.net/
 
 ## Features:
 o   Display a list of salespersons
+
 o   Update a salesperson
 
 o   Display a list of products
@@ -32,5 +33,15 @@ o   Display a list of sales that can be filtered by date range
 o   Create a sale
 
 o   Display a quarterly salesperson commission report
+
+## Pictures
+
+![image](https://github.com/akialter/Salestracking-Web-App/assets/117612624/5fd6032d-e1fb-4431-b2ee-f213e8f946e0)
+
+![image](https://github.com/akialter/Salestracking-Web-App/assets/117612624/588af34e-03f7-4f7c-91a9-243cf52dc71f)
+
+![image](https://github.com/akialter/Salestracking-Web-App/assets/117612624/0adad0fc-93f0-47f5-a72f-2ffed652772d)
+
+
 
 
